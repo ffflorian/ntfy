@@ -1,15 +1,15 @@
 {
   "author": "Florian Imdahl <git@ffflorian.de>",
-  "bin": {
-    "my-cli": "dist/cli.js"
+  "dependencies": {
+    "axios": "0.27.2"
   },
-  "dependencies": {},
-  "description": "A boilerplate for a modern™ TypeScript project.",
+  "description": "Send notifications over ntfy.sh.",
   "devDependencies": {
     "@evilmartians/lefthook": "1.2.1",
     "@ffflorian/eslint-config": "0.8.3",
     "@ffflorian/prettier-config": "0.1.4",
-    "@semantic-release/changelog": "6.0.1",
+    "@ffflorian/semantic-release-config": "0.5.2",
+    "@semantic-release/changelog": "6.0.2",
     "@semantic-release/git": "10.0.1",
     "@types/jasmine": "4.3.0",
     "@types/node": "~16",
@@ -41,15 +41,17 @@
     "dist"
   ],
   "keywords": [
-    "cli",
+    "ntfy",
     "typescript"
   ],
   "license": "GPL-3.0",
   "main": "dist/index.js",
-  "name": "@ffflorian/ts-boilerplate",
+  "name": "ntfy",
   "prettier": "@ffflorian/prettier-config",
-  "private": true,
-  "repository": "https://github.com/ffflorian/ts-boilerplate.git",
+  "release": {
+    "extends": "@ffflorian/semantic-release-config"
+  },
+  "repository": "https://github.com/ffflorian/ntfy.git",
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",
@@ -66,5 +68,5 @@
     "start": "ts-node src/cli.ts",
     "test": "ts-node -P tsconfig.jasmine.json node_modules/.bin/jasmine"
   },
-  "version": "1.0.0"
+  "version": "1.0.1"
 }
