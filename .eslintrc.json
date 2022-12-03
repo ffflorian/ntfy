@@ -4,7 +4,8 @@
     {
       "files": "*.ts",
       "rules": {
-        "@typescript-eslint/typedef": "off"
+        "@typescript-eslint/typedef": "off",
+        "no-magic-numbers": "off"
       }
     }
   ],
