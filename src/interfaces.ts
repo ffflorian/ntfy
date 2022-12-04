@@ -14,8 +14,8 @@ export enum MessagePriority {
 }
 
 export interface Authorization {
-  username: string;
   password: string;
+  username: string;
 }
 
 /**
@@ -28,54 +28,31 @@ export interface Authorization {
  * `intent` parameter. To send extras, use the `extras` parameter. Currently, only string extras are supported.
  */
 export interface BroadcastAction {
-  /** Label of the action button in the notification. */
-  label: string;
-  /** Android intent name, default is `io.heckel.ntfy.USER_ACTION`. */
-  intent?: string;
-  /** Android intent extras */
-  extras?: Record<string, string>;
   /** Clear notification after action button is tapped, default is `false`. */
   clear?: boolean;
+  /** Android intent extras. */
+  extras?: Record<string, string>;
+  /** Android intent name, default is `io.heckel.ntfy.USER_ACTION`. */
+  intent?: string;
+  /** Label of the action button in the notification. */
+  label: string;
 }
 
 export interface HTTPAction {
-  /** Label of the action button in the notification */
-  label: string;
-  /** URL to which the HTTP request will be sent */
-  url: string;
-  /** HTTP method to use for request, default is POST ⚠️ */
-  method?: HTTPMethod;
-  /** HTTP headers to pass in request. */
-  headers?: string[];
-  /** HTTP body */
+  /** HTTP body. */
   body?: string;
   /**
    * Clear notification after HTTP request succeeds. If the request fails, the notification is not cleared.
    * Default is `false`.
    */
   clear?: boolean;
-}
-
-/**
- * You can define which URL to open when a notification is clicked. This may be useful if your notification is related
- * to a Zabbix alert or a transaction that you'd like to provide the deep-link for. Tapping the notification will open
- * the web browser (or the app) and open the website.
- *
- * If you pass a website URL (`http://` or `https://`) the web browser will open. If you pass another URI that can be
- * handled by another app, the responsible app may open.
- *
- * Examples:
- *
- * * `http://` or `https://` will open your browser (or an app if it registered for a URL)
- * * `mailto:` links will open your mail app, e.g. `mailto:phil@example.com`
- * * `geo:` links will open Google Maps, e.g. `geo:0,0?q=1600+Amphitheatre+Parkway,+Mountain+View,+CA`
- * * `ntfy://` links will open ntfy (see [ntfy:// links](https://docs.ntfy.sh/subscribe/phone/#ntfy-links)), e.g.
- * `ntfy://ntfy.sh/stats`
- * * `twitter://` links will open Twitter, e.g. `twitter://user?screen_name=..`
- * * ...
-
-*/
-export interface ClickAction {
+  /** HTTP headers to pass in request. */
+  headers?: Record<string, string>;
+  /** Label of the action button in the notification. */
+  label: string;
+  /** HTTP method to use for request, default is POST ⚠️. */
+  method?: HTTPMethod;
+  /** URL to which the HTTP request will be sent. */
   url: string;
 }
 
@@ -95,21 +72,26 @@ export interface ClickAction {
  * * ...
  */
 export interface ViewAction {
+  /** Clear notification after action button is tapped, default is `false`. */
+  clear?: boolean;
   /** Label of the action button in the notification */
   label: string;
   /** URL to open when action is tapped */
   url: string;
-  /** Clear notification after action button is tapped, default is `false`. */
-  clear?: boolean;
 }
 
+export type Action =
+  | ({
+      type: 'view';
+    } & ViewAction)
+  | ({
+      type: 'broadcast';
+    } & BroadcastAction)
+  | ({
+      type: 'http';
+    } & HTTPAction);
+
 export interface Config {
-  /**
-   * Depending on whether the server is configured to support
-   * [access control](https://docs.ntfy.sh/config/#access-control), some topics may be read/write protected so that only
-   * users with the correct credentials can subscribe or publish to them.
-   */
-  authorization?: Authorization;
   /**
    * You can add action buttons to notifications to allow yourself to react to a notification directly. This is
    * incredibly useful and has countless applications.
@@ -126,7 +108,33 @@ export interface Config {
    * * [`http`](https://docs.ntfy.sh/publish/#send-http-request): Sends HTTP POST/GET/PUT request when the action button
    * is tapped
    */
-  actions?: Array<BroadcastAction | ViewAction | HTTPAction | ClickAction>;
+  actions?: Action[];
+  /**
+   * Depending on whether the server is configured to support
+   * [access control](https://docs.ntfy.sh/config/#access-control), some topics may be read/write protected so that only
+   * users with the correct credentials can subscribe or publish to them.
+   */
+  authorization?: Authorization;
+  /**
+   * You can define which URL to open when a notification is clicked. This may be useful if your notification is related
+   * to a Zabbix alert or a transaction that you'd like to provide the deep-link for. Tapping the notification will open
+   * the web browser (or the app) and open the website.
+   *
+   * If you pass a website URL (`http://` or `https://`) the web browser will open. If you pass another URI that can be
+   * handled by another app, the responsible app may open.
+   *
+   * Examples:
+   *
+   * * `http://` or `https://` will open your browser (or an app if it registered for a URL)
+   * * `mailto:` links will open your mail app, e.g. `mailto:phil@example.com`
+   * * `geo:` links will open Google Maps, e.g. `geo:0,0?q=1600+Amphitheatre+Parkway,+Mountain+View,+CA`
+   * * `ntfy://` links will open ntfy (see [ntfy:// links](https://docs.ntfy.sh/subscribe/phone/#ntfy-links)), e.g.
+   * `ntfy://ntfy.sh/stats`
+   * * `twitter://` links will open Twitter, e.g. `twitter://user?screen_name=..`
+   * * ...
+
+  */
+  clickURL?: string;
   /**
    * You can delay the delivery of messages and let ntfy send them at a later date. This can be used to send yourself
    * reminders or even to execute commands at a later date (if your subscriber acts on messages).
@@ -147,9 +155,9 @@ export interface Config {
    */
   delay?: string;
   /**
-   * **INFO**: If caching is disabled, messages will only be delivered to connected subscribers, and won't be re-delivered if a
-   * client re-connects. If a subscriber has (temporary) network issues or is reconnecting momentarily, **messages might
-   * be missed**.
+   * **INFO**: If caching is disabled, messages will only be delivered to connected subscribers, and won't be
+   * re-delivered if a client re-connects. If a subscriber has (temporary) network issues or is reconnecting
+   * momentarily, **messages might be missed**.
    *
    * ---
    *
@@ -234,7 +242,7 @@ export interface Config {
    * script names, hostnames, etc.). Use [the emoji short code list](https://docs.ntfy.sh/emojis/) to figure out what
    * tags can be converted to emojis.
    */
-  tags?: string[] | string;
+  tags?: string | string[];
   /** The notification title is typically set to the topic short URL (e.g. `ntfy.sh/mytopic`). */
   title?: string;
   /**

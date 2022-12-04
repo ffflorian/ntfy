@@ -1,6 +1,6 @@
 import axios, {AxiosRequestConfig, AxiosRequestHeaders} from 'axios';
 import {URL} from 'url';
-import {Config, MessagePriority} from './interfaces';
+import {BroadcastAction, Config, HTTPAction, ViewAction} from './interfaces';
 
 const defaultServerURL = 'https://ntfy.sh';
 
@@ -14,12 +14,68 @@ export class NtfyClient {
     this.serverURL = serverURL || defaultServerURL;
   }
 
-  async publish(config: Omit<Config, 'server'>): Promise<any> {
-    publish({
+  publish(config: Omit<Config, 'server'>): Promise<any> {
+    return publish({
       ...config,
       server: this.serverURL,
     });
   }
+}
+
+function buildBroadcastActionString(action: BroadcastAction & {type: 'broadcast'}): string {
+  let str = `${action.type}, ${action.label}`;
+
+  if (action.clear) {
+    str += ', clear=true';
+  }
+
+  // TODO: Make sure there is no ', ' at the end
+  if (action.extras && Object.keys(action.extras.length)) {
+    str += `, ${Object.entries(action.extras)
+      .map(([key, value]) => `extras.${key}=${value}`)
+      .join(', ')}`;
+  }
+
+  if (action.intent) {
+    str += `, intent=${action.intent}`;
+  }
+
+  return str;
+}
+
+function buildHTTPActionString(action: HTTPAction & {type: 'http'}): string {
+  let str = `${action.type}, ${action.label}, ${action.url}`;
+
+  if (action.method) {
+    str += `, method=${action.method.toUpperCase()}`;
+  }
+
+  if (action.clear) {
+    str += ', clear=true';
+  }
+
+  if (action.headers && Object.keys(action.headers).length) {
+    // TODO: Make sure there is no ', ' at the end
+    str += `, ${Object.entries(action.headers)
+      .map(([key, value]) => `${key}=${value}`)
+      .join(', ')}`;
+  }
+
+  if (action.body) {
+    str += `, ${action.body}`;
+  }
+
+  return str;
+}
+
+function buildViewActionString(action: ViewAction & {type: 'view'}): string {
+  let str = `${action.type}, ${action.label}, ${action.url}`;
+
+  if (action.clear) {
+    str += ', clear=true';
+  }
+
+  return str;
 }
 
 export async function publish(config: Config): Promise<any> {
@@ -27,8 +83,25 @@ export async function publish(config: Config): Promise<any> {
     headers: {},
   };
 
-  if (config.actions) {
-    // TODO
+  if (config.actions && config.actions.length) {
+    axiosConfig.headers['X-Actions'] = config.actions
+      .map(action => {
+        switch (action.type) {
+          case 'broadcast': {
+            return buildBroadcastActionString(action);
+          }
+          case 'http': {
+            return buildHTTPActionString(action);
+          }
+          case 'view': {
+            return buildViewActionString(action);
+          }
+          default: {
+            return '';
+          }
+        }
+      })
+      .join('; ');
   }
 
   if (config.authorization) {
@@ -64,7 +137,7 @@ export async function publish(config: Config): Promise<any> {
     axiosConfig.headers['X-Priority'] = config.priority;
   }
 
-  if (config.tags) {
+  if (config.tags && config.tags.length) {
     axiosConfig.headers['X-Tags'] = typeof config.tags === 'string' ? config.tags : config.tags.join(',');
   }
 
