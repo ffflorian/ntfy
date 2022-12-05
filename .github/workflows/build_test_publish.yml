@@ -44,6 +44,7 @@ jobs:
           yarn lint
           yarn test
           yarn dist
+          yarn flatten
 
       - name: Release on npm
         if: |
@@ -72,5 +73,6 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" > ~/.npmrc
+          cd flattened
           sed -i -E "s/\"name\": \"([^@].+)/\"name\": \"@ffflorian\/\1/" package.json
           npm publish --registry=https://npm.pkg.github.com || true

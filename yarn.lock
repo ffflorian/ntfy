@@ -1000,6 +1000,11 @@ asynckit@^0.4.0:
   resolved "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
 
+at-least-node@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/at-least-node/-/at-least-node-1.0.0.tgz#602cd4b46e844ad4effc92a8011a3c46e0238dc2"
+  integrity sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==
+
 axios@0.27.2:
   version "0.27.2"
   resolved "https://registry.npmjs.org/axios/-/axios-0.27.2.tgz#207658cc8621606e586c85db4b41a750e756d972"
@@ -1164,7 +1169,7 @@ cardinal@^2.1.1:
     ansicolors "~0.3.2"
     redeyed "~2.1.0"
 
-chalk@^2.0.0, chalk@^2.3.2:
+chalk@^2.0.0, chalk@^2.3.0, chalk@^2.3.2:
   version "2.4.2"
   resolved "https://registry.npmjs.org/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
@@ -1284,6 +1289,11 @@ combined-stream@^1.0.8:
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
+
+commander@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/commander/-/commander-6.0.0.tgz#2b270da94f8fb9014455312f829a1129dbf8887e"
+  integrity sha512-s7EA+hDtTYNhuXkTlhqew4txMZVdszBmKWSPEMxGr8ru8JXR7bLUFIAtPhcSuFdJQ0ILMxnJi8GkQL0yvDy/YA==
 
 comment-parser@1.3.1:
   version "1.3.1"
@@ -2059,6 +2069,16 @@ from2@^2.3.0:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
 
+fs-extra@9.0.1:
+  version "9.0.1"
+  resolved "https://registry.npmjs.org/fs-extra/-/fs-extra-9.0.1.tgz#910da0062437ba4c39fedd863f1675ccfefcb9fc"
+  integrity sha512-h2iAoN838FqAFJY2/qVpzFXy+EBxfVE220PalAqQLDVsFOHLJrZvut5puAbCdNv6WJk+B8ihI+k0c7JK5erwqQ==
+  dependencies:
+    at-least-node "^1.0.0"
+    graceful-fs "^4.2.0"
+    jsonfile "^6.0.1"
+    universalify "^1.0.0"
+
 fs-extra@^10.0.0:
   version "10.0.0"
   resolved "https://registry.npmjs.org/fs-extra/-/fs-extra-10.0.0.tgz#9ff61b655dde53fb34a82df84bb214ce802e17c1"
@@ -2393,6 +2413,13 @@ iconv-lite@^0.6.2:
   integrity sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
+
+ignore-walk@^3.0.3:
+  version "3.0.4"
+  resolved "https://registry.npmjs.org/ignore-walk/-/ignore-walk-3.0.4.tgz#c9a09f69b7c7b479a5d74ac1a3c0d4236d2a6335"
+  integrity sha512-PY6Ii8o1jMRA1z4F2hRkH/xN59ox43DavKvD3oDpfurRlOJyAHpifIwpbdv1n4jt4ov0jSpw3kQ4GhJnpBL6WQ==
+  dependencies:
+    minimatch "^3.0.4"
 
 ignore-walk@^5.0.1:
   version "5.0.1"
@@ -3010,6 +3037,13 @@ lodash@^4.17.13, lodash@^4.17.15, lodash@^4.17.21, lodash@^4.17.4:
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
+logdown@3.3.1:
+  version "3.3.1"
+  resolved "https://registry.npmjs.org/logdown/-/logdown-3.3.1.tgz#836d5a195b5949c6db631ccc9fecce0492e01d10"
+  integrity sha512-pjX0vlIJsYQlgVzFba2amXI1wZZnhrEorL68MdLI7B0/sN1TNUozBNFaHfcPHMM3A+INZ0OXFDxtnoaEgOmGjQ==
+  dependencies:
+    chalk "^2.3.0"
+
 lru-cache@^6.0.0:
   version "6.0.0"
   resolved "https://registry.npmjs.org/lru-cache/-/lru-cache-6.0.0.tgz#6d6fe6570ebd96aaf90fcad1dafa3b2566db3a94"
@@ -3447,6 +3481,16 @@ npm-package-arg@^9.0.0, npm-package-arg@^9.0.1, npm-package-arg@^9.0.2:
     hosted-git-info "^5.0.0"
     semver "^7.3.5"
     validate-npm-package-name "^4.0.0"
+
+npm-packlist@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.npmjs.org/npm-packlist/-/npm-packlist-2.1.2.tgz#a3045b52aefc37e7a5e86a55e6ca8cb1e909e25a"
+  integrity sha512-eByPaP+wsKai0BJX5pmb58d3mfR0zUATcnyuvSxIudTEn+swCPFLxh7srCmqB4hr7i9V24/DPjjq5b2qUtbgXQ==
+  dependencies:
+    glob "^7.1.6"
+    ignore-walk "^3.0.3"
+    npm-bundled "^1.1.1"
+    npm-normalize-package-bin "^1.0.1"
 
 npm-packlist@^5.1.0:
   version "5.1.0"
@@ -3911,6 +3955,16 @@ promzard@^0.3.0:
   integrity sha512-JZeYqd7UAcHCwI+sTOeUDYkvEU+1bQ7iE0UT1MgB/tERkAPkesW46MrpIySzODi+owTjZtiF8Ay5j9m60KmMBw==
   dependencies:
     read "1"
+
+publish-flat@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.npmjs.org/publish-flat/-/publish-flat-1.4.1.tgz#0784162e5fe1983fd177b22b23c0ee7c5155a095"
+  integrity sha512-VgUFZ5fQ502hxi7lLI8sYgvEaxHT1wabtyfXBDxRWj8+iGS9Y6XbR3KaXXEiAVxBENkU3cx7w6ED5ID2NjEs2g==
+  dependencies:
+    commander "6.0.0"
+    fs-extra "9.0.1"
+    logdown "3.3.1"
+    npm-packlist "2.1.2"
 
 pump@^3.0.0:
   version "3.0.0"
