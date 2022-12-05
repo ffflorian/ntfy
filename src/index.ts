@@ -144,7 +144,7 @@ export async function publish(config: Config): Promise<any> {
     axiosConfig.headers['X-Email'] = config.emailAddress;
   }
 
-  if (ConfigHasMessage(config)) {
+  if (ConfigHasMessage(config) && config.fileURL) {
     if (typeof config.fileURL === 'string') {
       axiosConfig.headers['X-Attach'] = config.fileURL as string;
     }
