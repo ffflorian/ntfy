@@ -39,7 +39,6 @@ function buildBroadcastActionString(action: BroadcastAction & {type: 'broadcast'
     str += ', clear=true';
   }
 
-  // TODO: Make sure there is no ', ' at the end
   if (action.extras && Object.keys(action.extras).length) {
     str += `, ${Object.entries(action.extras)
       .map(([key, value]) => `extras.${key}=${value}`)
@@ -73,7 +72,6 @@ function buildHTTPActionString(action: HTTPAction & {type: 'http'}): string {
   }
 
   if (action.headers && Object.keys(action.headers).length) {
-    // TODO: Make sure there is no ', ' at the end
     str += `, ${Object.entries(action.headers)
       .map(([key, value]) => `headers.${key}=${value}`)
       .join(', ')}`;
