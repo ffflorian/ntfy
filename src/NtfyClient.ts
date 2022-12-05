@@ -1,16 +1,8 @@
 import axios, {AxiosRequestConfig, AxiosRequestHeaders} from 'axios';
 import {URL} from 'url';
 import {promises as fs} from 'fs';
-import type {
-  AttachmentConfig,
-  BroadcastAction,
-  Config,
-  FileURL,
-  HTTPAction,
-  MessageConfig,
-  ResponseData,
-  ViewAction,
-} from './interfaces';
+import * as util from './util';
+import type {Config, FileURL, ResponseData} from './interfaces';
 
 const defaultServerURL = 'https://ntfy.sh';
 
@@ -32,68 +24,6 @@ export class NtfyClient {
   }
 }
 
-function buildBroadcastActionString(action: BroadcastAction & {type: 'broadcast'}): string {
-  let str = `${action.type}, ${action.label}`;
-
-  if (action.clear) {
-    str += ', clear=true';
-  }
-
-  if (action.extras && Object.keys(action.extras).length) {
-    str += `, ${Object.entries(action.extras)
-      .map(([key, value]) => `extras.${key}=${value}`)
-      .join(', ')}`;
-  }
-
-  if (action.intent) {
-    str += `, intent=${action.intent}`;
-  }
-
-  return str;
-}
-
-function ConfigHasAttachment(config: any): config is AttachmentConfig {
-  return !!config.fileAttachment;
-}
-
-function ConfigHasMessage(config: any): config is MessageConfig {
-  return !!config.message;
-}
-
-function buildHTTPActionString(action: HTTPAction & {type: 'http'}): string {
-  let str = `${action.type}, ${action.label}, ${action.url}`;
-
-  if (action.method) {
-    str += `, method=${action.method.toUpperCase()}`;
-  }
-
-  if (action.clear) {
-    str += ', clear=true';
-  }
-
-  if (action.headers && Object.keys(action.headers).length) {
-    str += `, ${Object.entries(action.headers)
-      .map(([key, value]) => `headers.${key}=${value}`)
-      .join(', ')}`;
-  }
-
-  if (action.body) {
-    str += `, ${action.body}`;
-  }
-
-  return str;
-}
-
-function buildViewActionString(action: ViewAction & {type: 'view'}): string {
-  let str = `${action.type}, ${action.label}, ${action.url}`;
-
-  if (action.clear) {
-    str += ', clear=true';
-  }
-
-  return str;
-}
-
 export async function publish<T extends Config>(config: T): Promise<ResponseData<T>> {
   const axiosConfig: AxiosRequestConfig & {headers: AxiosRequestHeaders} = {
     headers: {},
@@ -106,13 +36,13 @@ export async function publish<T extends Config>(config: T): Promise<ResponseData
       .map(action => {
         switch (action.type) {
           case 'broadcast': {
-            return buildBroadcastActionString(action);
+            return util.buildBroadcastActionString(action);
           }
           case 'http': {
-            return buildHTTPActionString(action);
+            return util.buildHTTPActionString(action);
           }
           case 'view': {
-            return buildViewActionString(action);
+            return util.buildViewActionString(action);
           }
           default: {
             return '';
@@ -143,7 +73,7 @@ export async function publish<T extends Config>(config: T): Promise<ResponseData
     axiosConfig.headers['X-Email'] = config.emailAddress;
   }
 
-  if (ConfigHasMessage(config) && config.fileURL) {
+  if (util.configHasMessage(config) && config.fileURL) {
     if (typeof config.fileURL === 'string') {
       axiosConfig.headers['X-Attach'] = config.fileURL as string;
     }
@@ -151,7 +81,7 @@ export async function publish<T extends Config>(config: T): Promise<ResponseData
     axiosConfig.headers['X-Filename'] = (config.fileURL as FileURL).filename;
   }
 
-  if (ConfigHasAttachment(config)) {
+  if (util.configHasAttachment(config)) {
     try {
       postData = await fs.readFile(config.fileAttachment);
     } catch (error: unknown) {
