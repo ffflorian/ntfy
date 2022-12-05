@@ -8,6 +8,7 @@ import type {
   FileURL,
   HTTPAction,
   MessageConfig,
+  ResponseData,
   ViewAction,
 } from './interfaces';
 
@@ -23,7 +24,7 @@ export class NtfyClient {
     this.serverURL = serverURL || defaultServerURL;
   }
 
-  publish(config: Config): Promise<any> {
+  publish<T extends Config>(config: T): Promise<ResponseData<T>> {
     return publish({
       server: this.serverURL,
       ...config,
@@ -95,7 +96,7 @@ function buildViewActionString(action: ViewAction & {type: 'view'}): string {
   return str;
 }
 
-export async function publish(config: Config): Promise<any> {
+export async function publish<T extends Config>(config: T): Promise<ResponseData<T>> {
   const axiosConfig: AxiosRequestConfig & {headers: AxiosRequestHeaders} = {
     headers: {},
   };

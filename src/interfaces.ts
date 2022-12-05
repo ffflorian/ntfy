@@ -13,6 +13,11 @@ export enum MessagePriority {
   MIN = 1,
 }
 
+export type ResponseData<T extends Config> = T & {
+  id: string;
+  time: number;
+};
+
 export interface FileURL {
   filename: string;
   url: string;
