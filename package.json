@@ -8,7 +8,7 @@
     "@evilmartians/lefthook": "1.2.1",
     "@ffflorian/eslint-config": "0.8.3",
     "@ffflorian/prettier-config": "0.1.4",
-    "@semantic-release/changelog": "6.0.1",
+    "@semantic-release/changelog": "6.0.2",
     "@semantic-release/git": "10.0.1",
     "@types/jasmine": "4.3.0",
     "@types/node": "~16",
