@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig, AxiosRequestHeaders} from 'axios';
+import axios, {AxiosRequestConfig, RawAxiosRequestHeaders} from 'axios';
 import {URL} from 'url';
 import {promises as fs} from 'fs';
 import * as util from './util';
@@ -25,7 +25,7 @@ export class NtfyClient {
 }
 
 export async function publish<T extends Config>(config: T): Promise<ResponseData<T>> {
-  const axiosConfig: AxiosRequestConfig & {headers: AxiosRequestHeaders} = {
+  const axiosConfig: AxiosRequestConfig & {headers: RawAxiosRequestHeaders} = {
     headers: {},
   };
 
