@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig, RawAxiosRequestHeaders} from 'axios';
+import axios, {AxiosHeaders, RawAxiosRequestConfig} from 'axios';
 import {URL} from 'url';
 import {promises as fs} from 'fs';
 import type {
@@ -95,31 +95,32 @@ function buildViewActionString(action: ViewAction & {type: 'view'}): string {
 }
 
 export async function publish<T extends Config>(config: T): Promise<ResponseData<T>> {
-  const axiosConfig: AxiosRequestConfig & {headers: RawAxiosRequestHeaders} = {
-    headers: {},
-  };
+  const axiosConfig: RawAxiosRequestConfig & {headers: AxiosHeaders} = {headers: new AxiosHeaders()};
 
   let postData: any;
 
   if (config.actions && config.actions.length) {
-    axiosConfig.headers['X-Actions'] = config.actions
-      .map(action => {
-        switch (action.type) {
-          case 'broadcast': {
-            return buildBroadcastActionString(action);
+    axiosConfig.headers.set(
+      'X-Actions',
+      config.actions
+        .map(action => {
+          switch (action.type) {
+            case 'broadcast': {
+              return buildBroadcastActionString(action);
+            }
+            case 'http': {
+              return buildHTTPActionString(action);
+            }
+            case 'view': {
+              return buildViewActionString(action);
+            }
+            default: {
+              return '';
+            }
           }
-          case 'http': {
-            return buildHTTPActionString(action);
-          }
-          case 'view': {
-            return buildViewActionString(action);
-          }
-          default: {
-            return '';
-          }
-        }
-      })
-      .join('; ');
+        })
+        .join('; ')
+    );
   }
 
   if (config.authorization) {
@@ -128,27 +129,27 @@ export async function publish<T extends Config>(config: T): Promise<ResponseData
   }
 
   if (config.delay) {
-    axiosConfig.headers['X-Delay'] = config.delay;
+    axiosConfig.headers.set('X-Delay', config.delay);
   }
 
   if (config.disableCache) {
-    axiosConfig.headers['X-Cache'] = 'no';
+    axiosConfig.headers.set('X-Cache', 'no');
   }
 
   if (config.disableFirebase) {
-    axiosConfig.headers['X-Firebase'] = 'no';
+    axiosConfig.headers.set('X-Firebase', 'no');
   }
 
   if (config.emailAddress) {
-    axiosConfig.headers['X-Email'] = config.emailAddress;
+    axiosConfig.headers.set('X-Email', config.emailAddress);
   }
 
   if (ConfigHasMessage(config) && config.fileURL) {
     if (typeof config.fileURL === 'string') {
-      axiosConfig.headers['X-Attach'] = config.fileURL as string;
+      axiosConfig.headers.set('X-Attach', config.fileURL as string);
     }
-    axiosConfig.headers['X-Attach'] = (config.fileURL as FileURL).url;
-    axiosConfig.headers['X-Filename'] = (config.fileURL as FileURL).filename;
+    axiosConfig.headers.set('X-Attach', (config.fileURL as FileURL).url);
+    axiosConfig.headers.set('X-Filename', (config.fileURL as FileURL).filename);
   }
 
   if (ConfigHasAttachment(config)) {
@@ -164,19 +165,19 @@ export async function publish<T extends Config>(config: T): Promise<ResponseData
   }
 
   if (config.iconURL) {
-    axiosConfig.headers['X-Icon'] = config.iconURL;
+    axiosConfig.headers.set('X-Icon', config.iconURL);
   }
 
   if (config.priority) {
-    axiosConfig.headers['X-Priority'] = config.priority;
+    axiosConfig.headers.set('X-Priority', config.priority);
   }
 
   if (config.tags && config.tags.length) {
-    axiosConfig.headers['X-Tags'] = typeof config.tags === 'string' ? config.tags : config.tags.join(',');
+    axiosConfig.headers.set('X-Tags', typeof config.tags === 'string' ? config.tags : config.tags.join(','));
   }
 
   if (config.title) {
-    axiosConfig.headers['X-Title'] = config.title;
+    axiosConfig.headers.set('X-Title', config.title);
   }
 
   const url = new URL(config.topic, config.server || defaultServerURL);
