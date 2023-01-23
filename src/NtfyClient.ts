@@ -1,4 +1,4 @@
-import axios, {AxiosHeaders, RawAxiosRequestConfig, RawAxiosRequestHeaders} from 'axios';
+import axios, {AxiosHeaders, RawAxiosRequestConfig} from 'axios';
 import {URL} from 'url';
 import {promises as fs} from 'fs';
 import type {
