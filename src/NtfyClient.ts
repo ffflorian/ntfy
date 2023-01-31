@@ -1,4 +1,4 @@
-import axios, {AxiosHeaders, RawAxiosRequestConfig} from 'axios';
+import axios, {AxiosHeaders, AxiosRequestConfig} from 'axios';
 import {URL} from 'url';
 import {promises as fs} from 'fs';
 import type {
@@ -95,7 +95,7 @@ function buildViewActionString(action: ViewAction & {type: 'view'}): string {
 }
 
 export async function publish<T extends Config>(config: T): Promise<ResponseData<T>> {
-  const axiosConfig: RawAxiosRequestConfig & {headers: AxiosHeaders} = {headers: new AxiosHeaders()};
+  const axiosConfig: AxiosRequestConfig & {headers: AxiosHeaders} = {headers: new AxiosHeaders()};
 
   let postData: any;
 
